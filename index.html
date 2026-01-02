@@ -1,0 +1,1391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>SOC Operators Guide 2026</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        body {
+            font-family: 'Courier New', Courier, monospace;
+            background: #0a0e27;
+            background: linear-gradient(135deg, #0a0e27 0%, #141829 50%, #1a1f3a 100%);
+            background-attachment: fixed;
+            color: #00ff88;
+            padding: 1%;
+            line-height: 1.7;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        
+        .container {
+            max-width: 100%;
+            margin: 0 auto;
+            animation: containerFadeIn 0.5s ease-out;
+        }
+        
+        @keyframes containerFadeIn {
+            from { 
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to { 
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        header {
+            background: rgba(0, 255, 136, 0.08);
+            border: 2px solid #00ff88;
+            padding: 15px;
+            margin-bottom: 3%;
+            border-radius: 8px;
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.3),
+                        inset 0 0 20px rgba(0, 255, 136, 0.05);
+            animation: headerGlow 3s ease-in-out infinite alternate;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(0, 255, 136, 0.1), transparent);
+            animation: headerShine 3s linear infinite;
+        }
+        
+        @keyframes headerGlow {
+            0% { box-shadow: 0 0 20px rgba(0, 255, 136, 0.3), inset 0 0 20px rgba(0, 255, 136, 0.05); }
+            100% { box-shadow: 0 0 30px rgba(0, 255, 136, 0.5), inset 0 0 30px rgba(0, 255, 136, 0.1); }
+        }
+        
+        @keyframes headerShine {
+            0% { transform: rotate(0deg) translate(-50%, -50%); }
+            100% { transform: rotate(360deg) translate(-50%, -50%); }
+        }
+        
+        h1 {
+            font-size: 20px;
+            color: #00ff88;
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            position: relative;
+            z-index: 1;
+            text-shadow: 0 0 10px rgba(0, 255, 136, 0.8),
+                         0 0 20px rgba(0, 255, 136, 0.4);
+            animation: titlePulse 2s ease-in-out infinite;
+        }
+        
+        @keyframes titlePulse {
+            0%, 100% { text-shadow: 0 0 10px rgba(0, 255, 136, 0.8), 0 0 20px rgba(0, 255, 136, 0.4); }
+            50% { text-shadow: 0 0 15px rgba(0, 255, 136, 1), 0 0 30px rgba(0, 255, 136, 0.6); }
+        }
+        
+        .year {
+            text-align: center;
+            color: #ff6b6b;
+            font-size: 13px;
+            margin-top: 6px;
+            position: relative;
+            z-index: 1;
+            font-weight: bold;
+            text-shadow: 0 0 8px rgba(255, 107, 107, 0.6);
+        }
+        
+        nav {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2%;
+            margin-bottom: 3%;
+        }
+        
+        .nav-btn {
+            background: linear-gradient(135deg, rgba(0, 255, 136, 0.15) 0%, rgba(0, 255, 136, 0.05) 100%);
+            border: 2px solid #00ff88;
+            color: #00ff88;
+            padding: 14px 10px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border-radius: 6px;
+            font-family: 'Courier New', Courier, monospace;
+            font-weight: bold;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 255, 136, 0.2);
+            text-shadow: 0 0 5px rgba(0, 255, 136, 0.5);
+        }
+        
+        .nav-btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(0, 255, 136, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.5s, height 0.5s;
+        }
+        
+        .nav-btn:active::before {
+            width: 300px;
+            height: 300px;
+        }
+        
+        .nav-btn:active {
+            background: linear-gradient(135deg, rgba(0, 255, 136, 0.3) 0%, rgba(0, 255, 136, 0.2) 100%);
+            transform: scale(0.96);
+            box-shadow: 0 2px 8px rgba(0, 255, 136, 0.4);
+        }
+        
+        .nav-btn:hover {
+            border-color: #00ffaa;
+            box-shadow: 0 6px 20px rgba(0, 255, 136, 0.4);
+            transform: translateY(-2px);
+        }
+        
+        .content-section {
+            display: none;
+            background: linear-gradient(135deg, rgba(10, 14, 39, 0.95) 0%, rgba(20, 24, 50, 0.95) 100%);
+            border: 2px solid #00ff88;
+            padding: 3%;
+            margin-bottom: 3%;
+            border-radius: 8px;
+            box-shadow: 0 8px 32px rgba(0, 255, 136, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .content-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 255, 136, 0.1), transparent);
+            animation: sectionScan 3s ease-in-out infinite;
+        }
+        
+        @keyframes sectionScan {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+        
+        .content-section.active {
+            display: block;
+            animation: fadeInUp 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        @keyframes fadeInUp {
+            from { 
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to { 
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        h2 {
+            font-size: 18px;
+            color: #ff6b6b;
+            margin-bottom: 15px;
+            border-bottom: 3px solid #ff6b6b;
+            padding-bottom: 8px;
+            position: relative;
+            z-index: 1;
+            text-shadow: 0 0 10px rgba(255, 107, 107, 0.6);
+            animation: h2Glow 2s ease-in-out infinite alternate;
+        }
+        
+        @keyframes h2Glow {
+            0% { text-shadow: 0 0 10px rgba(255, 107, 107, 0.6); }
+            100% { text-shadow: 0 0 15px rgba(255, 107, 107, 0.9); }
+        }
+        
+        h3 {
+            font-size: 15px;
+            color: #ffd93d;
+            margin-top: 15px;
+            margin-bottom: 10px;
+            position: relative;
+            z-index: 1;
+            text-shadow: 0 0 8px rgba(255, 217, 61, 0.5);
+        }
+        
+        h3::before {
+            content: '▶ ';
+            color: #ffd93d;
+            animation: blink 1.5s ease-in-out infinite;
+        }
+        
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+        
+        p, li {
+            font-size: 13px;
+            margin-bottom: 10px;
+            color: #b8c5d6;
+            position: relative;
+            z-index: 1;
+            line-height: 1.8;
+        }
+        
+        ul {
+            margin-left: 25px;
+            margin-bottom: 15px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        li {
+            margin-bottom: 8px;
+        }
+        
+        .alert-box {
+            background: linear-gradient(135deg, rgba(255, 107, 107, 0.25) 0%, rgba(255, 107, 107, 0.15) 100%);
+            border: 2px solid #ff6b6b;
+            padding: 12px;
+            margin: 12px 0;
+            border-radius: 6px;
+            position: relative;
+            z-index: 1;
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+            animation: alertPulse 2s ease-in-out infinite;
+        }
+        
+        @keyframes alertPulse {
+            0%, 100% { box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3); }
+            50% { box-shadow: 0 6px 20px rgba(255, 107, 107, 0.5); }
+        }
+        
+        .info-box {
+            background: linear-gradient(135deg, rgba(255, 217, 61, 0.25) 0%, rgba(255, 217, 61, 0.15) 100%);
+            border: 2px solid #ffd93d;
+            padding: 12px;
+            margin: 12px 0;
+            border-radius: 6px;
+            position: relative;
+            z-index: 1;
+            box-shadow: 0 4px 15px rgba(255, 217, 61, 0.3);
+        }
+        
+        .success-box {
+            background: linear-gradient(135deg, rgba(0, 255, 136, 0.25) 0%, rgba(0, 255, 136, 0.15) 100%);
+            border: 2px solid #00ff88;
+            padding: 12px;
+            margin: 12px 0;
+            border-radius: 6px;
+            position: relative;
+            z-index: 1;
+            box-shadow: 0 4px 15px rgba(0, 255, 136, 0.3);
+        }
+        
+        .code-block {
+            background: #000;
+            border: 2px solid #00ff88;
+            padding: 12px;
+            margin: 12px 0;
+            border-radius: 6px;
+            overflow-x: auto;
+            font-size: 11px;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            position: relative;
+            z-index: 1;
+            box-shadow: 0 4px 15px rgba(0, 255, 136, 0.2),
+                        inset 0 0 10px rgba(0, 255, 136, 0.1);
+            font-family: 'Courier New', Courier, monospace;
+            line-height: 1.6;
+        }
+        
+        .code-block::before {
+            content: '> TERMINAL';
+            display: block;
+            color: #00ff88;
+            font-size: 10px;
+            margin-bottom: 8px;
+            opacity: 0.7;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+            font-size: 12px;
+            position: relative;
+            z-index: 1;
+            box-shadow: 0 4px 15px rgba(0, 255, 136, 0.2);
+            border-radius: 6px;
+            overflow: hidden;
+        }
+        
+        th, td {
+            border: 1px solid #00ff88;
+            padding: 10px;
+            text-align: left;
+        }
+        
+        th {
+            background: linear-gradient(135deg, rgba(0, 255, 136, 0.3) 0%, rgba(0, 255, 136, 0.2) 100%);
+            color: #00ff88;
+            font-weight: bold;
+            text-shadow: 0 0 5px rgba(0, 255, 136, 0.5);
+        }
+        
+        td {
+            background: rgba(0, 0, 0, 0.3);
+            transition: background 0.3s ease;
+        }
+        
+        tr:hover td {
+            background: rgba(0, 255, 136, 0.1);
+        }
+        
+        .status-indicator {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 6px;
+            animation: statusBlink 2s ease-in-out infinite;
+            box-shadow: 0 0 5px currentColor;
+        }
+        
+        @keyframes statusBlink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        
+        .status-critical { 
+            background: #ff6b6b;
+            box-shadow: 0 0 10px #ff6b6b;
+        }
+        
+        .status-warning { 
+            background: #ffd93d;
+            box-shadow: 0 0 10px #ffd93d;
+        }
+        
+        .status-normal { 
+            background: #00ff88;
+            box-shadow: 0 0 10px #00ff88;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 3%;
+            padding: 15px;
+            border-top: 2px solid #00ff88;
+            font-size: 12px;
+            color: #6c7a89;
+            position: relative;
+            z-index: 1;
+            box-shadow: 0 -4px 15px rgba(0, 255, 136, 0.2);
+        }
+        
+        /* Scrollbar styling */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #0a0e27;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: #00ff88;
+            border-radius: 4px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: #00ffaa;
+        }
+        
+        /* Loading animation */
+        @keyframes scan {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+        
+        /* Responsive improvements */
+        @media (max-width: 480px) {
+            h1 { font-size: 18px; }
+            h2 { font-size: 16px; }
+            h3 { font-size: 14px; }
+            .nav-btn { font-size: 11px; padding: 12px 8px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🛡️ SOC OPERATORS GUIDE</h1>
+            <div class="year">Philippine Edition 2026</div>
+        </header>
+        
+        <nav>
+            <button class="nav-btn" onclick="showSection('overview')">Overview</button>
+            <button class="nav-btn" onclick="showSection('threats')">Threats PH</button>
+            <button class="nav-btn" onclick="showSection('incident')">Incident Response</button>
+            <button class="nav-btn" onclick="showSection('tools')">Tools & SIEM</button>
+            <button class="nav-btn" onclick="showSection('playbooks')">Playbooks</button>
+            <button class="nav-btn" onclick="showSection('compliance')">Compliance</button>
+            <button class="nav-btn" onclick="showSection('ioc')">IOC Database</button>
+            <button class="nav-btn" onclick="showSection('checklist')">Daily Checklist</button>
+            <button class="nav-btn" onclick="showSection('reports')">Reporting</button>
+            <button class="nav-btn" onclick="showSection('forensics')">Forensics</button>
+            <button class="nav-btn" onclick="showSection('network')">Network Security</button>
+            <button class="nav-btn" onclick="showSection('malware')">Malware Analysis</button>
+            <button class="nav-btn" onclick="showSection('automation')">Automation</button>
+            <button class="nav-btn" onclick="showSection('killchain')">Kill Chain</button>
+            <button class="nav-btn" onclick="showSection('windows')">Windows Logs</button>
+            <button class="nav-btn" onclick="showSection('linux')">Linux Security</button>
+            <button class="nav-btn" onclick="showSection('cloud')">Cloud Security</button>
+            <button class="nav-btn" onclick="showSection('osint')">OSINT Tools</button>
+            <button class="nav-btn" onclick="showSection('training')">Training</button>
+            <button class="nav-btn" onclick="showSection('contacts')">Contacts</button>
+        </nav>
+        
+        <div id="overview" class="content-section active">
+            <h2>SOC Operator Role & Responsibilities</h2>
+            
+            <h3>Primary Duties</h3>
+            <ul>
+                <li>24/7 monitoring of security events and alerts</li>
+                <li>Initial triage and investigation of security incidents</li>
+                <li>Threat detection using SIEM and security tools</li>
+                <li>Documentation of security events and incidents</li>
+                <li>Escalation of critical threats to senior analysts</li>
+                <li>Maintaining security infrastructure uptime</li>
+            </ul>
+            
+            <div class="info-box">
+                <strong>Penalties:</strong> Fines up to PHP 5 million and imprisonment of 1-6 years for DPA violations. SOC operators must ensure all personal data handling is logged and protected.
+            </div>
+            
+            <h3>Key NPC Circulars</h3>
+            <table>
+                <tr>
+                    <th>Circular</th>
+                    <th>Topic</th>
+                    <th>Requirement</th>
+                </tr>
+                <tr>
+                    <td>16-01</td>
+                    <td>Security Breach</td>
+                    <td>Mandatory breach notification</td>
+                </tr>
+                <tr>
+                    <td>16-03</td>
+                    <td>Data Sharing</td>
+                    <td>Consent and documentation</td>
+                </tr>
+                <tr>
+                    <td>21-01</td>
+                    <td>Privacy Manual</td>
+                    <td>Document security measures</td>
+                </tr>
+            </table>
+        </div>
+        
+        <div id="ioc" class="content-section">
+            <h2>IOC Database & Hunting</h2>
+            
+            <h3>Critical IOC Categories</h3>
+            <table>
+                <tr>
+                    <th>Type</th>
+                    <th>Examples</th>
+                    <th>Where to Check</th>
+                </tr>
+                <tr>
+                    <td>IP Addresses</td>
+                    <td>Known C2 servers</td>
+                    <td>Firewall, Proxy, SIEM</td>
+                </tr>
+                <tr>
+                    <td>Domains</td>
+                    <td>Phishing, malware hosting</td>
+                    <td>DNS logs, Web proxy</td>
+                </tr>
+                <tr>
+                    <td>File Hashes</td>
+                    <td>MD5, SHA1, SHA256</td>
+                    <td>EDR, AV, File systems</td>
+                </tr>
+            </table>
+            
+            <h3>Threat Hunting Queries</h3>
+            <div class="code-block"># Suspicious PowerShell downloads
+EventCode=4104 
+| search "DownloadString" OR "DownloadFile"
+
+# Credential dumping attempts
+EventCode=4688 
+| search "mimikatz" OR "procdump"
+
+# Lateral movement via PSExec
+EventCode=5145 
+| search "\\ADMIN$" OR "\\C$"</div>
+        </div>
+        
+        <div id="checklist" class="content-section">
+            <h2>Daily SOC Checklist</h2>
+            
+            <h3>Start of Shift (First 30 Minutes)</h3>
+            <div class="success-box">
+                <strong>✓</strong> Read handover notes from previous shift<br>
+                <strong>✓</strong> Check all monitoring dashboards are operational<br>
+                <strong>✓</strong> Review overnight alerts (prioritize P1/P2)<br>
+                <strong>✓</strong> Verify all log sources are feeding to SIEM<br>
+                <strong>✓</strong> Check security tool health status<br>
+                <strong>✓</strong> Review threat intelligence feeds for new IOCs<br>
+                <strong>✓</strong> Test incident escalation contacts
+            </div>
+            
+            <h3>Hourly Tasks</h3>
+            <table>
+                <tr>
+                    <th>Time</th>
+                    <th>Task</th>
+                    <th>Duration</th>
+                </tr>
+                <tr>
+                    <td>:00</td>
+                    <td>Review SIEM dashboard alerts</td>
+                    <td>10 min</td>
+                </tr>
+                <tr>
+                    <td>:15</td>
+                    <td>Check firewall blocked connections</td>
+                    <td>5 min</td>
+                </tr>
+                <tr>
+                    <td>:30</td>
+                    <td>Monitor failed authentication</td>
+                    <td>10 min</td>
+                </tr>
+            </table>
+            
+            <h3>End of Shift (Last 30 Minutes)</h3>
+            <div class="info-box">
+                <strong>✓</strong> Complete all pending ticket documentation<br>
+                <strong>✓</strong> Update status on ongoing investigations<br>
+                <strong>✓</strong> Write detailed handover notes for next shift<br>
+                <strong>✓</strong> Brief next shift on active incidents<br>
+                <strong>✓</strong> Log any tool issues or concerns
+            </div>
+        </div>
+        
+        <div id="reports" class="content-section">
+            <h2>Incident Reporting Templates</h2>
+            
+            <h3>Incident Report Structure</h3>
+            <div class="code-block">INCIDENT ID: INC-2026-XXXXX
+DATE/TIME: [ISO 8601 format]
+SEVERITY: [P1/P2/P3/P4]
+STATUS: [Open/In Progress/Resolved]
+
+1. EXECUTIVE SUMMARY
+2. INCIDENT DETAILS
+3. TIMELINE OF EVENTS
+4. INDICATORS OF COMPROMISE
+5. RESPONSE ACTIONS TAKEN
+6. ROOT CAUSE ANALYSIS
+7. LESSONS LEARNED</div>
+            
+            <h3>NPC Breach Notification</h3>
+            <div class="alert-box">
+                <strong>Required Information for NPC:</strong><br>
+                1. Nature of breach (unauthorized access, disclosure)<br>
+                2. Personal data affected (types, quantity)<br>
+                3. Affected individuals (number, categories)<br>
+                4. Likely consequences of breach<br>
+                5. Measures taken/proposed to address breach<br>
+                6. Contact person for further information<br>
+                7. Date/time breach was discovered
+            </div>
+        </div>
+        
+        <div id="forensics" class="content-section">
+            <h2>Digital Forensics Quick Guide</h2>
+            
+            <h3>Order of Volatility (Collect First)</h3>
+            <div class="info-box">
+                <strong>Most Volatile → Least Volatile</strong><br>
+                1. CPU registers, cache<br>
+                2. Memory (RAM)<br>
+                3. Network connections, running processes<br>
+                4. Temporary file systems<br>
+                5. Hard disk<br>
+                6. Backup media, logs
+            </div>
+            
+            <h3>Windows Forensics Artifacts</h3>
+            <table>
+                <tr>
+                    <th>Artifact</th>
+                    <th>Location</th>
+                    <th>Information</th>
+                </tr>
+                <tr>
+                    <td>Event Logs</td>
+                    <td>C:\Windows\System32\winevt\Logs\</td>
+                    <td>System, Security events</td>
+                </tr>
+                <tr>
+                    <td>Prefetch</td>
+                    <td>C:\Windows\Prefetch\</td>
+                    <td>Program execution history</td>
+                </tr>
+                <tr>
+                    <td>Registry</td>
+                    <td>C:\Windows\System32\config\</td>
+                    <td>System configuration</td>
+                </tr>
+            </table>
+            
+            <div class="success-box">
+                <strong>Chain of Custody:</strong><br>
+                ✓ Document who collected evidence<br>
+                ✓ Use write-blockers for disk imaging<br>
+                ✓ Generate cryptographic hashes<br>
+                ✓ Store evidence securely<br>
+                ✓ Never work on original evidence
+            </div>
+        </div>
+        
+        <div id="network" class="content-section">
+            <h2>Network Security Monitoring</h2>
+            
+            <h3>Common Port Numbers</h3>
+            <table>
+                <tr>
+                    <th>Port</th>
+                    <th>Service</th>
+                    <th>Security Notes</th>
+                </tr>
+                <tr>
+                    <td>22</td>
+                    <td>SSH</td>
+                    <td>Brute force attacks common</td>
+                </tr>
+                <tr>
+                    <td>80/443</td>
+                    <td>HTTP/HTTPS</td>
+                    <td>C2 communication, malware</td>
+                </tr>
+                <tr>
+                    <td>445</td>
+                    <td>SMB</td>
+                    <td>Ransomware, lateral movement</td>
+                </tr>
+                <tr>
+                    <td>3389</td>
+                    <td>RDP</td>
+                    <td>Brute force, unauthorized access</td>
+                </tr>
+            </table>
+            
+            <h3>PCAP Analysis Commands</h3>
+            <div class="code-block"># Wireshark Display Filters
+http.request.method == "POST"
+tcp.flags.syn == 1
+ip.src == 192.168.1.100
+
+# Tcpdump Capture Examples
+tcpdump -i eth0 port 80 -w http.pcap
+tcpdump -i eth0 src 10.0.0.5</div>
+        </div>
+        
+        <div id="malware" class="content-section">
+            <h2>Malware Analysis Procedures</h2>
+            
+            <h3>Malware Family Classification</h3>
+            <table>
+                <tr>
+                    <th>Type</th>
+                    <th>Behavior</th>
+                    <th>Examples</th>
+                </tr>
+                <tr>
+                    <td>Ransomware</td>
+                    <td>Encrypts files, demands payment</td>
+                    <td>LockBit, BlackCat</td>
+                </tr>
+                <tr>
+                    <td>Trojan</td>
+                    <td>Disguised malicious program</td>
+                    <td>Emotet, TrickBot</td>
+                </tr>
+                <tr>
+                    <td>RAT</td>
+                    <td>Remote access/control</td>
+                    <td>AsyncRAT, njRAT</td>
+                </tr>
+            </table>
+            
+            <h3>Static Analysis Checklist</h3>
+            <div class="success-box">
+                <strong>✓</strong> Calculate file hashes (MD5, SHA1, SHA256)<br>
+                <strong>✓</strong> Check VirusTotal for known detections<br>
+                <strong>✓</strong> Examine PE headers (PEStudio)<br>
+                <strong>✓</strong> Extract strings (strings.exe)<br>
+                <strong>✓</strong> Identify packer/obfuscation<br>
+                <strong>✓</strong> Check digital signature
+            </div>
+        </div>
+        
+        <div id="automation" class="content-section">
+            <h2>SOC Automation Scripts</h2>
+            
+            <h3>PowerShell Security Scripts</h3>
+            <div class="code-block"># Check suspicious scheduled tasks
+Get-ScheduledTask | Where-Object {
+    $_.TaskPath -notlike "\Microsoft*"
+}
+
+# Find recently modified executables
+Get-ChildItem C:\Windows\System32\*.exe | 
+Where-Object {$_.LastWriteTime -gt (Get-Date).AddDays(-7)}
+
+# List all listening ports
+Get-NetTCPConnection | Where-Object {
+    $_.State -eq "Listen"
+}</div>
+            
+            <h3>Python IOC Automation</h3>
+            <div class="code-block"># Bulk IOC lookup in VirusTotal
+import requests
+
+def check_hash_vt(hash_value, api_key):
+    url = f"https://www.virustotal.com/api/v3/files/{hash_value}"
+    headers = {"x-apikey": api_key}
+    response = requests.get(url, headers=headers)
+    return response.json()</div>
+        </div>
+        
+        <div id="killchain" class="content-section">
+            <h2>Cyber Kill Chain & MITRE ATT&CK</h2>
+            
+            <h3>Lockheed Martin Cyber Kill Chain</h3>
+            <table>
+                <tr>
+                    <th>Stage</th>
+                    <th>Description</th>
+                    <th>SOC Detection</th>
+                </tr>
+                <tr>
+                    <td>1. Reconnaissance</td>
+                    <td>Gather target information</td>
+                    <td>IDS alerts, honeypots</td>
+                </tr>
+                <tr>
+                    <td>2. Weaponization</td>
+                    <td>Create malicious payload</td>
+                    <td>Threat intelligence feeds</td>
+                </tr>
+                <tr>
+                    <td>3. Delivery</td>
+                    <td>Send weapon to target</td>
+                    <td>Email gateway, web proxy</td>
+                </tr>
+                <tr>
+                    <td>4. Exploitation</td>
+                    <td>Execute exploit code</td>
+                    <td>EDR alerts, anomaly detection</td>
+                </tr>
+                <tr>
+                    <td>5. Installation</td>
+                    <td>Install backdoor/malware</td>
+                    <td>File integrity monitoring</td>
+                </tr>
+                <tr>
+                    <td>6. C2</td>
+                    <td>Establish command channel</td>
+                    <td>Network monitoring, firewall</td>
+                </tr>
+                <tr>
+                    <td>7. Actions</td>
+                    <td>Achieve objectives</td>
+                    <td>DLP, database monitoring</td>
+                </tr>
+            </table>
+            
+            <h3>MITRE ATT&CK Tactics</h3>
+            <div class="code-block">TA0001 - Initial Access
+TA0002 - Execution
+TA0003 - Persistence
+TA0004 - Privilege Escalation
+TA0005 - Defense Evasion
+TA0006 - Credential Access
+TA0007 - Discovery
+TA0008 - Lateral Movement
+TA0009 - Collection
+TA0010 - Exfiltration
+TA0011 - Command and Control
+TA0040 - Impact</div>
+        </div>
+        
+        <div id="windows" class="content-section">
+            <h2>Windows Event Log Analysis</h2>
+            
+            <h3>Critical Windows Event IDs</h3>
+            <table>
+                <tr>
+                    <th>Event ID</th>
+                    <th>Description</th>
+                    <th>Priority</th>
+                </tr>
+                <tr>
+                    <td>4624</td>
+                    <td>Successful logon</td>
+                    <td>Medium</td>
+                </tr>
+                <tr>
+                    <td>4625</td>
+                    <td>Failed logon attempt</td>
+                    <td>High</td>
+                </tr>
+                <tr>
+                    <td>4688</td>
+                    <td>New process created</td>
+                    <td>Critical</td>
+                </tr>
+                <tr>
+                    <td>4720</td>
+                    <td>User account created</td>
+                    <td>Medium</td>
+                </tr>
+            </table>
+            
+            <h3>PowerShell Logging Events</h3>
+            <div class="code-block">Event ID 4104 - Script Block Logging (CRITICAL)
+
+# Monitor for suspicious PowerShell
+EventCode=4104 
+| search "DownloadString" OR "IEX" OR "-enc"</div>
+        </div>
+        
+        <div id="linux" class="content-section">
+            <h2>Linux Security Monitoring</h2>
+            
+            <h3>Critical Linux Log Files</h3>
+            <table>
+                <tr>
+                    <th>Log File</th>
+                    <th>Purpose</th>
+                    <th>Key Events</th>
+                </tr>
+                <tr>
+                    <td>/var/log/auth.log</td>
+                    <td>Authentication logs</td>
+                    <td>SSH logins, sudo commands</td>
+                </tr>
+                <tr>
+                    <td>/var/log/syslog</td>
+                    <td>System messages</td>
+                    <td>Service starts/stops</td>
+                </tr>
+                <tr>
+                    <td>/var/log/apache2/</td>
+                    <td>Web server logs</td>
+                    <td>HTTP requests, errors</td>
+                </tr>
+            </table>
+            
+            <h3>SSH Security Monitoring</h3>
+            <div class="code-block"># Monitor failed SSH attempts
+grep "Failed password" /var/log/auth.log
+
+# Find successful SSH logins
+grep "Accepted password" /var/log/auth.log
+
+# Check for brute force patterns
+grep "Failed password" /var/log/auth.log | awk '{print $11}' | sort | uniq -c</div>
+        </div>
+        
+        <div id="cloud" class="content-section">
+            <h2>Cloud Security Monitoring</h2>
+            
+            <h3>AWS Security Services</h3>
+            <table>
+                <tr>
+                    <th>Service</th>
+                    <th>Purpose</th>
+                    <th>Key Alerts</th>
+                </tr>
+                <tr>
+                    <td>CloudTrail</td>
+                    <td>API activity logging</td>
+                    <td>Root account usage, unauthorized API calls</td>
+                </tr>
+                <tr>
+                    <td>GuardDuty</td>
+                    <td>Threat detection</td>
+                    <td>Malicious IPs, anomalous behavior</td>
+                </tr>
+                <tr>
+                    <td>Security Hub</td>
+                    <td>Centralized security view</td>
+                    <td>Compliance violations</td>
+                </tr>
+            </table>
+            
+            <div class="alert-box">
+                <strong>HIGH PRIORITY ALERTS:</strong><br>
+                • Root/Global Admin account usage<br>
+                • IAM policy changes (privilege escalation)<br>
+                • Security group modifications (exposing services)<br>
+                • S3 bucket made public<br>
+                • CloudTrail logging disabled
+            </div>
+        </div>
+        
+        <div id="osint" class="content-section">
+            <h2>OSINT Tools & Techniques</h2>
+            
+            <h3>Domain & IP Intelligence</h3>
+            <table>
+                <tr>
+                    <th>Tool</th>
+                    <th>Purpose</th>
+                    <th>URL</th>
+                </tr>
+                <tr>
+                    <td>Shodan</td>
+                    <td>Internet-connected devices</td>
+                    <td>shodan.io</td>
+                </tr>
+                <tr>
+                    <td>VirusTotal</td>
+                    <td>URL/file/IP reputation</td>
+                    <td>virustotal.com</td>
+                </tr>
+                <tr>
+                    <td>AbuseIPDB</td>
+                    <td>IP blacklist database</td>
+                    <td>abuseipdb.com</td>
+                </tr>
+            </table>
+            
+            <h3>Email & Phishing Analysis</h3>
+            <div class="code-block"># Email Header Analysis
+- MXToolbox Header Analyzer
+- Google Admin Toolbox Messageheader
+
+# Check email compromise
+- Have I Been Pwned (haveibeenpwned.com)
+- DeHashed (dehashed.com)
+
+# Phishing URL scanners
+- URLScan.io
+- PhishTank
+- Google Safe Browsing</div>
+        </div>
+        
+        <div id="training" class="content-section">
+            <h2>Continuous Training & Development</h2>
+            
+            <h3>Essential Certifications</h3>
+            <ul>
+                <li><strong>Entry Level:</strong> CompTIA Security+, CySA+</li>
+                <li><strong>SOC Analyst:</strong> GIAC GSEC, GCIH, GCIA</li>
+                <li><strong>Advanced:</strong> OSCP, CEH, CISSP</li>
+                <li><strong>Specialized:</strong> GCFA (Forensics), GREM (Malware)</li>
+            </ul>
+            
+            <h3>Recommended Training Platforms</h3>
+            <table>
+                <tr>
+                    <th>Platform</th>
+                    <th>Focus Area</th>
+                    <th>Cost</th>
+                </tr>
+                <tr>
+                    <td>TryHackMe</td>
+                    <td>Hands-on labs, SOC paths</td>
+                    <td>Free/Paid</td>
+                </tr>
+                <tr>
+                    <td>HackTheBox</td>
+                    <td>CTF, pentesting skills</td>
+                    <td>Free/VIP</td>
+                </tr>
+                <tr>
+                    <td>CyberDefenders</td>
+                    <td>Blue team challenges</td>
+                    <td>Free</td>
+                </tr>
+            </table>
+            
+            <h3>Philippine Cybersecurity Communities</h3>
+            <ul>
+                <li>CERT-PH (cert.ph) - Official CERT</li>
+                <li>PISA (Philippine Info Security Association)</li>
+                <li>Rootcon - Annual security conference</li>
+                <li>OWASP Manila Chapter</li>
+                <li>Facebook: PH InfoSec Community</li>
+            </ul>
+        </div>
+        
+        <div id="contacts" class="content-section">
+            <h2>Emergency Contacts & Resources</h2>
+            
+            <h3>Philippine Authorities</h3>
+            <table>
+                <tr>
+                    <th>Organization</th>
+                    <th>Contact</th>
+                    <th>Purpose</th>
+                </tr>
+                <tr>
+                    <td>CERT-PH</td>
+                    <td>cert@dost.gov.ph</td>
+                    <td>Incident reporting</td>
+                </tr>
+                <tr>
+                    <td>NPC</td>
+                    <td>(02) 8234-2228</td>
+                    <td>Data breach reporting</td>
+                </tr>
+                <tr>
+                    <td>PNP-ACG</td>
+                    <td>1326 / acg@pnp.gov.ph</td>
+                    <td>Cybercrime reporting</td>
+                </tr>
+                <tr>
+                    <td>NBI-Cybercrime</td>
+                    <td>(02) 8525-4093</td>
+                    <td>Criminal investigations</td>
+                </tr>
+            </table>
+            
+            <h3>Threat Intelligence Feeds</h3>
+            <div class="code-block"># Free Threat Feeds
+- AlienVault OTX (otx.alienvault.com)
+- Abuse.ch (abuse.ch)
+- VirusTotal (virustotal.com)
+- Talos Intelligence (talosintelligence.com)
+- PhishTank (phishtank.org)
+- Spamhaus (spamhaus.org)</div>
+            
+            <h3>Useful Security Tools</h3>
+            <ul>
+                <li><strong>VirusTotal:</strong> File/URL scanning</li>
+                <li><strong>Hybrid Analysis:</strong> Malware sandbox</li>
+                <li><strong>URLScan.io:</strong> Website scanning</li>
+                <li><strong>CyberChef:</strong> Data analysis toolkit</li>
+                <li><strong>Shodan:</strong> Internet device search</li>
+            </ul>
+        </div>
+        
+        <footer>
+            <p>🇵🇭 Philippine SOC Operators Guide 2026</p>
+            <p>Stay vigilant, stay secure | Last updated: January 2026</p>
+        </footer>
+    </div>
+    
+    <script>
+        function showSection(sectionId) {
+            const sections = document.querySelectorAll('.content-section');
+            sections.forEach(section => section.classList.remove('active'));
+            const targetSection = document.getElementById(sectionId);
+            if (targetSection) {
+                targetSection.classList.add('active');
+                window.scrollTo({top: 0, behavior: 'smooth'});
+            }
+        }
+        
+        // Add ripple effect on button click
+        document.querySelectorAll('.nav-btn').forEach(button => {
+            button.addEventListener('click', function(e) {
+                const ripple = document.createElement('span');
+                const rect = this.getBoundingClientRect();
+                const size = Math.max(rect.width, rect.height);
+                const x = e.clientX - rect.left - size / 2;
+                const y = e.clientY - rect.top - size / 2;
+                
+                ripple.style.width = ripple.style.height = size + 'px';
+                ripple.style.left = x + 'px';
+                ripple.style.top = y + 'px';
+                ripple.classList.add('ripple');
+                
+                this.appendChild(ripple);
+                
+                setTimeout(() => ripple.remove(), 600);
+            });
+        });
+    </script>
+</body>
+</html>Philippine Context:</strong> SOC operators in the Philippines must be aware of local threat actors, regional APT groups, and compliance requirements under the Data Privacy Act of 2012 and NPC regulations.
+            </div>
+            
+            <h3>Shift Operations</h3>
+            <table>
+                <tr>
+                    <th>Shift</th>
+                    <th>Time</th>
+                    <th>Priority Tasks</th>
+                </tr>
+                <tr>
+                    <td>Day</td>
+                    <td>08:00-16:00</td>
+                    <td>Threat hunting, reporting</td>
+                </tr>
+                <tr>
+                    <td>Mid</td>
+                    <td>16:00-00:00</td>
+                    <td>Monitoring, incident response</td>
+                </tr>
+                <tr>
+                    <td>Night</td>
+                    <td>00:00-08:00</td>
+                    <td>Alert monitoring, log review</td>
+                </tr>
+            </table>
+            
+            <h3>Key Performance Metrics</h3>
+            <ul>
+                <li>Mean Time to Detect (MTTD): &lt; 5 minutes</li>
+                <li>Mean Time to Respond (MTTR): &lt; 15 minutes</li>
+                <li>False Positive Rate: &lt; 10%</li>
+                <li>Alert Closure Rate: &gt; 95% within shift</li>
+            </ul>
+        </div>
+        
+        <div id="threats" class="content-section">
+            <h2>Philippine Threat Landscape 2026</h2>
+            
+            <div class="alert-box">
+                <span class="status-indicator status-critical"></span>
+                <strong>CRITICAL:</strong> Ransomware attacks targeting BPO sector and government agencies
+            </div>
+            
+            <h3>Top Threats in Philippines</h3>
+            <ul>
+                <li><strong>Phishing & BEC:</strong> Business Email Compromise targeting finance departments</li>
+                <li><strong>Ransomware:</strong> LockBit, BlackCat variants targeting healthcare and education</li>
+                <li><strong>Mobile Malware:</strong> Banking trojans via SMS and fake apps</li>
+                <li><strong>Cryptojacking:</strong> Unauthorized mining on corporate infrastructure</li>
+                <li><strong>APT Groups:</strong> Chinese and North Korean state-sponsored groups</li>
+            </ul>
+            
+            <h3>Common Attack Vectors</h3>
+            <table>
+                <tr>
+                    <th>Vector</th>
+                    <th>Prevalence</th>
+                    <th>Target Sector</th>
+                </tr>
+                <tr>
+                    <td>Phishing Email</td>
+                    <td>75%</td>
+                    <td>All sectors</td>
+                </tr>
+                <tr>
+                    <td>Compromised RDP</td>
+                    <td>45%</td>
+                    <td>SMEs, Healthcare</td>
+                </tr>
+                <tr>
+                    <td>Malicious Downloads</td>
+                    <td>35%</td>
+                    <td>Government, Education</td>
+                </tr>
+            </table>
+            
+            <h3>IOC Monitoring Priority</h3>
+            <div class="code-block"># High-priority indicators for PH
+- Suspicious .ph domain registrations
+- Traffic to known C2 servers in APAC
+- Credential stuffing on OWA/VPN
+- Large data exfiltration (>10GB)
+- Multiple failed login attempts
+- PowerShell obfuscation patterns</div>
+        </div>
+        
+        <div id="incident" class="content-section">
+            <h2>Incident Response Procedures</h2>
+            
+            <h3>IR Lifecycle</h3>
+            <ul>
+                <li><strong>1. Preparation:</strong> Tools ready, playbooks accessible</li>
+                <li><strong>2. Detection:</strong> Alert triggered, initial analysis</li>
+                <li><strong>3. Containment:</strong> Isolate affected systems</li>
+                <li><strong>4. Eradication:</strong> Remove threat, patch vulnerabilities</li>
+                <li><strong>5. Recovery:</strong> Restore systems, monitor for re-infection</li>
+                <li><strong>6. Lessons Learned:</strong> Document and improve</li>
+            </ul>
+            
+            <h3>Severity Classification</h3>
+            <table>
+                <tr>
+                    <th>Level</th>
+                    <th>Description</th>
+                    <th>Response Time</th>
+                </tr>
+                <tr>
+                    <td><span class="status-indicator status-critical"></span>P1</td>
+                    <td>Critical - Active breach</td>
+                    <td>Immediate</td>
+                </tr>
+                <tr>
+                    <td><span class="status-indicator status-warning"></span>P2</td>
+                    <td>High - Potential breach</td>
+                    <td>&lt; 30 mins</td>
+                </tr>
+                <tr>
+                    <td><span class="status-indicator status-normal"></span>P3</td>
+                    <td>Medium - Suspicious activity</td>
+                    <td>&lt; 2 hours</td>
+                </tr>
+                <tr>
+                    <td><span class="status-indicator status-normal"></span>P4</td>
+                    <td>Low - Informational</td>
+                    <td>&lt; 24 hours</td>
+                </tr>
+            </table>
+            
+            <div class="alert-box">
+                <strong>Data Privacy Act Compliance:</strong> Report personal data breaches to NPC within 72 hours. Document all affected individuals and data categories.
+            </div>
+            
+            <h3>Initial Response Checklist</h3>
+            <div class="success-box">
+                <strong>✓</strong> Create incident ticket with timestamp<br>
+                <strong>✓</strong> Document all actions taken<br>
+                <strong>✓</strong> Preserve evidence and logs<br>
+                <strong>✓</strong> Notify team lead for P1/P2<br>
+                <strong>✓</strong> Do NOT alert attacker<br>
+                <strong>✓</strong> Isolate affected systems if confirmed
+            </div>
+        </div>
+        
+        <div id="tools" class="content-section">
+            <h2>Essential SOC Tools & SIEM</h2>
+            
+            <h3>Primary Tools Stack</h3>
+            <ul>
+                <li><strong>SIEM:</strong> Splunk, QRadar, ELK Stack, Microsoft Sentinel</li>
+                <li><strong>EDR:</strong> CrowdStrike, Carbon Black, Microsoft Defender</li>
+                <li><strong>Network Monitoring:</strong> Wireshark, Zeek, Suricata</li>
+                <li><strong>Threat Intel:</strong> MISP, ThreatConnect, AlienVault OTX</li>
+                <li><strong>Forensics:</strong> FTK, Autopsy, Volatility</li>
+                <li><strong>Ticketing:</strong> ServiceNow, Jira, TheHive</li>
+            </ul>
+            
+            <h3>Common SIEM Queries</h3>
+            <div class="code-block"># Failed login attempts (Splunk)
+index=windows EventCode=4625
+| stats count by src_ip, user
+| where count > 5
+
+# Suspicious PowerShell
+index=windows EventCode=4104
+| search "encoded" OR "downloadstring"
+
+# Large file transfers
+index=network bytes > 1000000000</div>
+            
+            <h3>Log Sources to Monitor</h3>
+            <table>
+                <tr>
+                    <th>Source</th>
+                    <th>Priority</th>
+                    <th>Key Events</th>
+                </tr>
+                <tr>
+                    <td>Windows Event Logs</td>
+                    <td>Critical</td>
+                    <td>4624, 4625, 4688, 4104</td>
+                </tr>
+                <tr>
+                    <td>Firewall Logs</td>
+                    <td>High</td>
+                    <td>Denied connections, geo-blocks</td>
+                </tr>
+                <tr>
+                    <td>Email Gateway</td>
+                    <td>High</td>
+                    <td>Phishing, malware attachments</td>
+                </tr>
+            </table>
+        </div>
+        
+        <div id="playbooks" class="content-section">
+            <h2>SOC Playbooks</h2>
+            
+            <h3>Phishing Email Response</h3>
+            <div class="info-box">
+                <strong>Step 1:</strong> Verify the reported email in email gateway<br>
+                <strong>Step 2:</strong> Extract indicators (sender, links, attachments)<br>
+                <strong>Step 3:</strong> Check if links/attachments are malicious (VirusTotal)<br>
+                <strong>Step 4:</strong> Search for other users who received same email<br>
+                <strong>Step 5:</strong> If malicious, quarantine all instances<br>
+                <strong>Step 6:</strong> Block sender domain and URLs in gateway<br>
+                <strong>Step 7:</strong> Notify affected users, document in ticket
+            </div>
+            
+            <h3>Malware Infection Response</h3>
+            <div class="alert-box">
+                <strong>CRITICAL ACTIONS:</strong><br>
+                1. Isolate infected endpoint from network immediately<br>
+                2. Do NOT shut down (preserve RAM for forensics)<br>
+                3. Capture memory dump if trained<br>
+                4. Collect EDR telemetry and logs<br>
+                5. Identify patient zero and lateral movement<br>
+                6. Escalate to L2 for deep forensics<br>
+                7. Reimage system after IOC extraction
+            </div>
+            
+            <h3>Ransomware Detection</h3>
+            <div class="code-block">INDICATORS:
+- Mass file encryption (.locked, .encrypted)
+- Ransom notes (README.txt)
+- Spike in file modifications
+- Disabled AV/EDR agents
+- Shadow copy deletion
+
+IMMEDIATE ACTIONS:
+1. Disconnect affected systems
+2. Identify ransomware variant
+3. Preserve encrypted files
+4. Contact cyber insurance
+5. Report to CERT-PH and NPC</div>
+        </div>
+        
+        <div id="compliance" class="content-section">
+            <h2>Philippine Compliance Requirements</h2>
+            
+            <h3>Data Privacy Act of 2012 (RA 10173)</h3>
+            <ul>
+                <li>Implement security measures to protect personal data</li>
+                <li>Notify NPC of data breaches within 72 hours</li>
+                <li>Notify affected individuals as soon as possible</li>
+                <li>Appoint Data Protection Officer (DPO)</li>
+                <li>Conduct Privacy Impact Assessments</li>
+                <li>Maintain audit logs for personal data processing</li>
+            </ul>
+            
+            <div class="alert-box">
+                <strong>
